@@ -1,0 +1,93 @@
+DNA Pen
+
+-------------------------------------------------------------------------------------------
+
+Goal - Draw an object at Nanoscale.
+1. Steps - DNA origami , an area where DNA can be used to draw stuffs.
+
+2. Molecular canvas is an interface where we can draw an object or something , with code we convert that to DNA sequences.
+   2 types - 
+   Free hand Molecular and Digitized Molecular Canvas.
+
+In digitized, the drawing area is divided into cells called the DNA bricks. click on the brick to draw it. 
+In free hand, it's just drawing with a pen(free hand).
+
+3.DNA brick dimension h,w is of multiples of 0.6,1.75
+
+4.The outputs are reported in an excel file.
+
+DNA Bricks constructed from 4 domains,
+
+Taken the brick size = 3,7 (multiples of 0.6,1.75)
+also for a 1050 x 700 
+bricks can be 1050 / 7 , 700 / 3 so, approximately 150, 233 
+we are taking i=15,j=23
+ 
+
+-----------------------------------------------------------------------------------------------
+
+Code explanation - 
+
+DNA domain - 
+
+Seq Generator 
+for j = 0,
+   i= 0 - PTGP
+   i = 14 - CPPA
+   i = between (0,14) - ACGT
+
+for j = odd,
+    seq1,seq2 = C,T
+    we move back - 15 ,  generate seq 3, 4 from 2,1.
+
+for j = even & != 0 ,
+   i= 0 -  seq3 from 1, PPT
+   i = 14 - CPP , seq4 from 2
+   i = between (0,14) - CT, generate seq 3, 4 from 1,2.
+ 
+for error and stability check -
+    functions such as  checkHamming();
+                       checkThermalSecondaryStability();
+                       checkSeqStability(), where we calculate SeqEnergy , if energy < 0 (system stable)
+                             - we prepare the seqOneEnergyArray[][] with some energy values (-1,-2)
+                             - values - 65,84 and 71,67 at Transverse positions and assign a value to it.
+Complete Domain - Concat all the sequences and returns
+In DNA Domain free grid, (from free canvas)
+we take array from FreeGrid.
+xyDomainList = GenerateFreegridDNA.xyDomainList;
+
+
+Assign Optimized Seq
+
+if(MainFrame.HighFreeEnergy==true)
+findCentralDigitized(),findCentralFree()
+It centralizes the sequence , find min y,max y for a x and find min x, max x for a y
+
+Assign constrained seq is same as optimized, but we dont use the "central" there.
+
+Assign Random
+if(c.equals("A")){
+				    while(SeqList.get(randomIndex).isUsed==true||
+				    	   SeqList.get(randomIndex).DNASequence.charAt(0)!='A'||
+				    	   SeqList.get(randomIndex).DNASequence.charAt(9)!='A'){
+				    	randomIndex= rand.nextInt(SeqList.size()); 
+For free and digitized, 
+we use XYdomain , XYdomainfree arrays to generate the digitized and free sequences.
+
+--------------------------------------------------------------------------------------------------------
+
+Advanced Ideas:
+
+further work can be done, in color field, where we can do color drawing.
+Implementation Ideas:
+
+while for each cell in a row(width parameter) 
+we maintain an color vector where information can stored in as:
+row1 = { "r" , "none" , "b" , "g" , "none"} where each element represents a cell/ "Brick" in the row.
+None means no color in that cell/ also we can use RGB wheel # if we have some custom color.
+
+--------------------------------------------------------------------------------------------------------
+
+References,
+https://github.com/guptalab/dnapen
+https://doi.org/10.48550/arXiv.1306.0369
